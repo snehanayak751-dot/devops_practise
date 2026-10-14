@@ -1,0 +1,386 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediCare - Medicine Reminder</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f3f7fc;
+            color: #243447;
+        }
+
+        header {
+            background: #1677d2;
+            color: white;
+            padding: 22px 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            font-size: 27px;
+        }
+
+        header span {
+            font-size: 14px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .welcome {
+            margin-bottom: 25px;
+        }
+
+        .welcome h2 {
+            font-size: 27px;
+            margin-bottom: 8px;
+        }
+
+        .welcome p {
+            color: #718096;
+        }
+
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+            gap: 18px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            padding: 23px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px #dce6f1;
+        }
+
+        .card h3 {
+            color: #718096;
+            font-size: 15px;
+            margin-bottom: 15px;
+        }
+
+        .number {
+            font-size: 30px;
+            color: #1677d2;
+            font-weight: bold;
+        }
+
+        .section {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px #dce6f1;
+        }
+
+        .section h2 {
+            margin-bottom: 20px;
+            font-size: 21px;
+        }
+
+        .medicine {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            padding: 17px 0;
+            border-bottom: 1px solid #e7edf4;
+        }
+
+        .medicine:last-child {
+            border-bottom: none;
+        }
+
+        .medicine h3 {
+            font-size: 16px;
+            margin-bottom: 6px;
+        }
+
+        .medicine p {
+            font-size: 13px;
+            color: #718096;
+        }
+
+        .time {
+            color: #1677d2;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        button {
+            background: #1677d2;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 11px 16px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        button:hover {
+            background: #105eaa;
+        }
+
+        .taken {
+            background: #198754;
+        }
+
+        .taken:hover {
+            background: #146c43;
+        }
+
+        form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 12px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d6e0eb;
+            border-radius: 8px;
+            background: white;
+            font-size: 14px;
+        }
+
+        form button {
+            grid-column: 1 / -1;
+        }
+
+        footer {
+            text-align: center;
+            color: #718096;
+            padding: 25px;
+            font-size: 13px;
+        }
+
+        @media (max-width: 500px) {
+            header {
+                padding: 20px;
+            }
+
+            .welcome h2 {
+                font-size: 23px;
+            }
+
+            .section {
+                padding: 18px;
+            }
+
+            .medicine {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>💙 MediCare</h1>
+        <span>Medicine Reminder</span>
+    </header>
+
+    <main class="container">
+
+        <div class="welcome">
+            <h2>Hello, Welcome Back!</h2>
+            <p>Take care of your health, one dose at a time.</p>
+        </div>
+
+        <div class="summary">
+            <div class="card">
+                <h3>Total Medicines</h3>
+                <div class="number" id="total">2</div>
+            </div>
+
+            <div class="card">
+                <h3>Doses Taken</h3>
+                <div class="number" id="takenCount">0</div>
+            </div>
+
+            <div class="card">
+                <h3>Doses Remaining</h3>
+                <div class="number" id="remaining">2</div>
+            </div>
+        </div>
+
+        <section class="section">
+            <h2>💊 Today's Medicines</h2>
+            <div id="medicineList">
+
+                <div class="medicine">
+                    <div>
+                        <h3>Vitamin C</h3>
+                        <p>1 tablet · After breakfast</p>
+                    </div>
+                    <span class="time">09:00 AM</span>
+                    <button onclick="markTaken(this)">Mark Taken</button>
+                </div>
+
+                <div class="medicine">
+                    <div>
+                        <h3>Calcium</h3>
+                        <p>1 tablet · After lunch</p>
+                    </div>
+                    <span class="time">01:00 PM</span>
+                    <button onclick="markTaken(this)">Mark Taken</button>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>➕ Add a Medicine</h2>
+
+            <form id="medicineForm">
+                <input
+                    type="text"
+                    id="medicineName"
+                    placeholder="Medicine name"
+                    required
+                >
+
+                <input
+                    type="text"
+                    id="dosage"
+                    placeholder="Dosage (e.g. 1 tablet)"
+                    required
+                >
+
+                <input
+                    type="time"
+                    id="medicineTime"
+                    required
+                >
+
+                <select id="instructions">
+                    <option>After breakfast</option>
+                    <option>Before breakfast</option>
+                    <option>After lunch</option>
+                    <option>Before lunch</option>
+                    <option>After dinner</option>
+                    <option>Before dinner</option>
+                    <option>As prescribed</option>
+                </select>
+
+                <button type="submit">Add Medicine</button>
+            </form>
+        </section>
+
+    </main>
+
+    <footer>
+        © 2026 MediCare · Your health matters.
+        <p>Demo app only. Follow your healthcare professional's instructions.</p>
+    </footer>
+
+    <script>
+        let takenCount = 0;
+
+        function updateSummary() {
+            const medicines = document.querySelectorAll(".medicine");
+            const total = medicines.length;
+
+            document.getElementById("total").textContent = total;
+            document.getElementById("takenCount").textContent = takenCount;
+            document.getElementById("remaining").textContent =
+                total - takenCount;
+        }
+
+        function markTaken(button) {
+            if (button.classList.contains("taken")) {
+                return;
+            }
+
+            button.textContent = "✓ Taken";
+            button.classList.add("taken");
+            button.disabled = true;
+
+            takenCount++;
+            updateSummary();
+        }
+
+        document.getElementById("medicineForm").addEventListener(
+            "submit",
+            function(event) {
+                event.preventDefault();
+
+                const name =
+                    document.getElementById("medicineName").value.trim();
+
+                const dosage =
+                    document.getElementById("dosage").value.trim();
+
+                const time =
+                    document.getElementById("medicineTime").value;
+
+                const instructions =
+                    document.getElementById("instructions").value;
+
+                if (!name || !dosage || !time) {
+                    return;
+                }
+
+                const [hours, minutes] = time.split(":");
+                const date = new Date();
+                date.setHours(Number(hours), Number(minutes));
+
+                const formattedTime = date.toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit"
+                });
+
+                const medicine = document.createElement("div");
+                medicine.className = "medicine";
+
+                const details = document.createElement("div");
+                const title = document.createElement("h3");
+                title.textContent = name;
+
+                const description = document.createElement("p");
+                description.textContent = dosage + " · " + instructions;
+
+                details.append(title, description);
+
+                const timeLabel = document.createElement("span");
+                timeLabel.className = "time";
+                timeLabel.textContent = formattedTime;
+
+                const button = document.createElement("button");
+                button.textContent = "Mark Taken";
+                button.addEventListener("click", function() {
+                    markTaken(button);
+                });
+
+                medicine.append(details, timeLabel, button);
+
+                document.getElementById("medicineList").appendChild(medicine);
+
+                document.getElementById("medicineForm").reset();
+                updateSummary();
+            }
+        );
+
+        updateSummary();
+    </script>
+
+</body>
+</html>
